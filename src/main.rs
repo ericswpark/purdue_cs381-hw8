@@ -20,7 +20,7 @@ async fn main() {
         .with_max_level(tracing::Level::DEBUG)
         .init();
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:10000")
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:10001")
         .await
         .unwrap();
     axum::serve(listener, app).await.unwrap();

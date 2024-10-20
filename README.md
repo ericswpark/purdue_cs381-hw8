@@ -4,4 +4,4 @@ API server for testing inputs for homework, written with Rust
 
 ## Usage
 
-Compile and run, and send API requests to port `10000`.
+Compile and run, and send API requests to port `10001`.
