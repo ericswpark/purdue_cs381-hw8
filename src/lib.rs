@@ -11,7 +11,7 @@ fn extract_possible_min_duration_order(orders: &mut Vec<(usize, u32, u32, u32)>,
 }
 
 
-pub fn starbucks_scheduler(t: &[u32], d: &[u32]) -> Result<(Vec<usize>, u32)> {
+pub fn starbucks_scheduler(t: &[u32], d: &[u32]) -> Result<(Vec<usize>, Vec<usize>, u32)> {
     if t.len() != d.len() {
         return Err(anyhow!("Start time and duration time arrays do not match in length!"));
     }
@@ -24,6 +24,7 @@ pub fn starbucks_scheduler(t: &[u32], d: &[u32]) -> Result<(Vec<usize>, u32)> {
     }
 
     let mut completed_orders = Vec::new();
+    let mut orders_worked: Vec<usize> = Vec::new();
     let mut current_time = 0;
 
     while pending_orders.len() > 0 {
@@ -35,6 +36,11 @@ pub fn starbucks_scheduler(t: &[u32], d: &[u32]) -> Result<(Vec<usize>, u32)> {
         // Check if there is actually an order we can process right now
         // (It's possible that there are no orders assigned)
         if let Some(mut next_order) = next_order {
+            // Record ordering of worked on order
+            if orders_worked.len() == 0 || *orders_worked.last().unwrap() != next_order.0 {
+                orders_worked.push(next_order.0);
+            }
+
             next_order.2 -= 1;
 
             if next_order.2 == 0 {
@@ -46,7 +52,7 @@ pub fn starbucks_scheduler(t: &[u32], d: &[u32]) -> Result<(Vec<usize>, u32)> {
         }
     }
     
-    Ok((completed_orders.iter().map(|x| x.0).collect(), completed_orders.iter().map(|x| x.3).sum()))
+    Ok((completed_orders.iter().map(|x| x.0).collect(), orders_worked, completed_orders.iter().map(|x| x.3).sum()))
 }
 
 
@@ -59,7 +65,8 @@ struct Q1TestCase {
     t: Vec<u32>,
     d: Vec<u32>,
     result: u32,
-    result_ordering: Vec<usize>
+    result_ordering: Vec<usize>,
+    result_worked_order: Vec<usize>
 }
 
 #[cfg(test)]
@@ -80,9 +87,16 @@ mod tests {
                 "Test case {} failed - incorrect ordering!",
                 tc.name
             );
-            
+
             assert_eq!(
                 results.1,
+                tc.result_worked_order,
+                "Test case {} failed - incorrect worked order!",
+                tc.name
+            );
+            
+            assert_eq!(
+                results.2,
                 tc.result,
                 "Test case {} failed - incorrect sum!",
                 tc.name
