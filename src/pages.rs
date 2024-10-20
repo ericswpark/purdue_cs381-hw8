@@ -5,39 +5,24 @@ use anyhow::Result;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
-use cs381_hw7::*;
+use cs381_hw8::*;
 use serde_json::Value;
 use tokio::fs::File;
 use tokio::io::AsyncReadExt;
 
-fn do_question_two(s: Vec<u32>, e: Vec<u32>) -> Result<u32, AppError> {
-    Ok(vip_scheduler(&s, &e)?)
+fn do_question_one(t: Vec<u32>, d: Vec<u32>) -> Result<u32, AppError> {
+    Ok(starbucks_scheduler(&t, &d)?)
 }
 
-pub async fn question_two(Json(payload): Json<QuestionTwo>) -> impl IntoResponse {
-    match do_question_two(payload.s, payload.e) {
+pub async fn question_one(Json(payload): Json<QuestionOne>) -> impl IntoResponse {
+    match do_question_one(payload.t, payload.d) {
         Ok(result) => (StatusCode::OK, Json(QuestionAnswer { answer: result })).into_response(),
         Err(e) => e.into_response(),
     }
 }
 
-pub async fn question_two_test_cases() -> impl IntoResponse {
-    load_test_cases("q2_test_cases.json").await
-}
-
-fn do_question_four(p: Vec<u32>, t: Vec<u32>, d: Vec<u32>) -> Result<u32, AppError> {
-    Ok(homework_max_points(&p, &t, &d)?)
-}
-
-pub async fn question_four(Json(payload): Json<QuestionFour>) -> impl IntoResponse {
-    match do_question_four(payload.p, payload.t, payload.d) {
-        Ok(result) => (StatusCode::OK, Json(QuestionAnswer { answer: result })).into_response(),
-        Err(e) => e.into_response(),
-    }
-}
-
-pub async fn question_four_test_cases() -> impl IntoResponse {
-    load_test_cases("q4_test_cases.json").await
+pub async fn question_one_test_cases() -> impl IntoResponse {
+    load_test_cases("q1_test_cases.json").await
 }
 
 async fn load_test_cases(file_path: &str) -> impl IntoResponse {

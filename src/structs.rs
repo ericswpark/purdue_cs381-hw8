@@ -4,14 +4,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 #[derive(Deserialize)]
-pub struct QuestionTwo {
-    pub(crate) s: Vec<u32>,
-    pub(crate) e: Vec<u32>,
-}
-
-#[derive(Deserialize)]
-pub struct QuestionFour {
-    pub(crate) p: Vec<u32>,
+pub struct QuestionOne {
     pub(crate) t: Vec<u32>,
     pub(crate) d: Vec<u32>,
 }

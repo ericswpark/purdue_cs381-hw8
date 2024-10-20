@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Simple example",
+    "t": [0, 0],
+    "d": [4, 6],
+    "result": 14
+  },
+  {
+    "name": "Handout example",
+    "t": [0, 10, 10, 10],
+    "d": [100, 1, 1, 1],
+    "result": 139
+  },
+  {
+    "name": "First-second no orders",
+    "t": [1, 1],
+    "d": [4, 6],
+    "result": 16
+  }
+]
