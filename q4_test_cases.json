@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Simple example 1",
+    "p": [50, 80],
+    "t": [1, 2],
+    "d": [2, 2],
+    "result": 130
+  },
+  {
+    "name": "Extended example (from Oct 14 collab hours)",
+    "p": [20, 50, 80, 100],
+    "t": [1, 2, 3, 3],
+    "d": [3, 3, 3, 4],
+    "result": 250
+  },
+  {
+    "name": "More homeworks than days",
+    "p": [50, 80, 80],
+    "t": [1, 2, 2],
+    "d": [2, 2, 2],
+    "result": 130
+  }
+]

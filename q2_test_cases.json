@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Simple example 1",
+    "s": [1, 3, 5],
+    "e": [2, 4, 6],
+    "result": 3
+  },
+  {
+    "name": "Simple example 2",
+    "s": [1, 3],
+    "e": [2, 4],
+    "result": 2
+  }
+]
