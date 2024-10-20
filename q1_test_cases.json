@@ -3,18 +3,21 @@
     "name": "Simple example",
     "t": [0, 0],
     "d": [4, 6],
-    "result": 14
+    "result": 14,
+    "result_ordering": [1, 2]
   },
   {
     "name": "Handout example",
     "t": [0, 10, 10, 10],
     "d": [100, 1, 1, 1],
-    "result": 139
+    "result": 139,
+    "result_ordering": [2, 3, 4, 1]
   },
   {
     "name": "First-second no orders",
     "t": [1, 1],
     "d": [4, 6],
-    "result": 16
+    "result": 16,
+    "result_ordering": [1, 2]
   }
 ]

@@ -2,8 +2,8 @@ use anyhow::{anyhow, Result};
 
 use serde::Deserialize;
 
-fn extract_possible_min_duration_order(orders: &mut Vec<(u32, u32, u32)>, current_time: u32) -> Option<(u32, u32, u32)> {
-    if let Some(&min_value) = orders.iter().filter(|&x| x.0 <= current_time).min_by_key(|x| x.1) {
+fn extract_possible_min_duration_order(orders: &mut Vec<(usize, u32, u32, u32)>, current_time: u32) -> Option<(usize, u32, u32, u32)> {
+    if let Some(&min_value) = orders.iter().filter(|&x| x.1 <= current_time).min_by_key(|x| x.2) {
         let index = orders.iter().position(|&x| x == min_value).unwrap();
         return Some(orders.remove(index));
     }
@@ -11,16 +11,16 @@ fn extract_possible_min_duration_order(orders: &mut Vec<(u32, u32, u32)>, curren
 }
 
 
-pub fn starbucks_scheduler(t: &[u32], d: &[u32]) -> Result<u32> {
+pub fn starbucks_scheduler(t: &[u32], d: &[u32]) -> Result<(Vec<usize>, u32)> {
     if t.len() != d.len() {
         return Err(anyhow!("Start time and duration time arrays do not match in length!"));
     }
 
     // Create zipped array of orders
-    // Start time, duration, and completed-at time
-    let mut pending_orders: Vec<(u32, u32, u32)> = Vec::new();
-    for (start_time, duration) in t.iter().zip(d.iter()) {
-        pending_orders.push((*start_time, *duration, 0));
+    // Index, start time, duration, and completed-at time
+    let mut pending_orders: Vec<(usize, u32, u32, u32)> = Vec::new();
+    for ((index, start_time), duration) in t.iter().enumerate().zip(d.iter()) {
+        pending_orders.push((index + 1, *start_time, *duration, 0));
     }
 
     let mut completed_orders = Vec::new();
@@ -35,10 +35,10 @@ pub fn starbucks_scheduler(t: &[u32], d: &[u32]) -> Result<u32> {
         // Check if there is actually an order we can process right now
         // (It's possible that there are no orders assigned)
         if let Some(mut next_order) = next_order {
-            next_order.1 -= 1;
+            next_order.2 -= 1;
 
-            if next_order.1 == 0 {
-                next_order.2 = current_time;
+            if next_order.2 == 0 {
+                next_order.3 = current_time;
                 completed_orders.push(next_order);
             } else {
                 pending_orders.push(next_order);
@@ -46,7 +46,7 @@ pub fn starbucks_scheduler(t: &[u32], d: &[u32]) -> Result<u32> {
         }
     }
     
-    Ok(completed_orders.iter().map(|x| x.2).sum())
+    Ok((completed_orders.iter().map(|x| x.0).collect(), completed_orders.iter().map(|x| x.3).sum()))
 }
 
 
@@ -59,6 +59,7 @@ struct Q1TestCase {
     t: Vec<u32>,
     d: Vec<u32>,
     result: u32,
+    result_ordering: Vec<usize>
 }
 
 #[cfg(test)]
@@ -71,10 +72,19 @@ mod tests {
         let tcs: Vec<Q1TestCase> = serde_json::from_str(&tcs_str).expect("Invalid TC JSON file!");
 
         for tc in tcs {
+            let results = starbucks_scheduler(tc.t.as_slice(), tc.d.as_slice()).unwrap();
+            
             assert_eq!(
-                starbucks_scheduler(tc.t.as_slice(), tc.d.as_slice()).unwrap(),
+                results.0,
+                tc.result_ordering,
+                "Test case {} failed - incorrect ordering!",
+                tc.name
+            );
+            
+            assert_eq!(
+                results.1,
                 tc.result,
-                "Test case {} failed!",
+                "Test case {} failed - incorrect sum!",
                 tc.name
             );
         }

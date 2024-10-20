@@ -12,6 +12,7 @@ pub struct QuestionOne {
 #[derive(Serialize)]
 pub struct QuestionAnswer {
     pub(crate) answer: u32,
+    pub(crate) answer_ordering: Vec<usize>
 }
 
 pub struct AppError(anyhow::Error);

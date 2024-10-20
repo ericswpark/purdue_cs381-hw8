@@ -10,13 +10,13 @@ use serde_json::Value;
 use tokio::fs::File;
 use tokio::io::AsyncReadExt;
 
-fn do_question_one(t: Vec<u32>, d: Vec<u32>) -> Result<u32, AppError> {
+fn do_question_one(t: Vec<u32>, d: Vec<u32>) -> Result<(Vec<usize>, u32), AppError> {
     Ok(starbucks_scheduler(&t, &d)?)
 }
 
 pub async fn question_one(Json(payload): Json<QuestionOne>) -> impl IntoResponse {
     match do_question_one(payload.t, payload.d) {
-        Ok(result) => (StatusCode::OK, Json(QuestionAnswer { answer: result })).into_response(),
+        Ok(result) => (StatusCode::OK, Json(QuestionAnswer { answer: result.1, answer_ordering: result.0 })).into_response(),
         Err(e) => e.into_response(),
     }
 }
